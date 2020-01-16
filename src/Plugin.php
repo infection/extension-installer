@@ -60,8 +60,6 @@ PHP;
         $infectionInstalledExtensions = [];
 
         foreach ($composer->getRepositoryManager()->getLocalRepository()->getPackages() as $package) {
-            // todo test by infection
-
             if ($package->getType() !== 'infection-extension') {
                 continue;
             }
