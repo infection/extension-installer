@@ -32,6 +32,7 @@ final class GeneratedExtensionsConfig
     }
 }
 PHP;
+
     public function activate(Composer $composer, IOInterface $io)
     {
         // no need to activate anything
