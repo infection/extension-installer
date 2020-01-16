@@ -58,6 +58,7 @@ PHP;
         $composer = $event->getComposer();
         $installationManager = $composer->getInstallationManager();
         $infectionInstalledExtensions = [];
+        $invalidInfectionExtensions = [];
 
         foreach ($composer->getRepositoryManager()->getLocalRepository()->getPackages() as $package) {
             if ($package->getType() !== 'infection-extension') {
@@ -67,6 +68,8 @@ PHP;
             $extensionClass = $package->getExtra()['infection']['class'] ?? null;
 
             if ($extensionClass === null) {
+                $invalidInfectionExtensions[$package->getName()] = '`class` is not specified under `extra.infection` key';
+
                 continue;
             }
 
@@ -84,14 +87,27 @@ PHP;
         $generatedConfigFileContents = sprintf(self::FILE_TEMPLATE, var_export($infectionInstalledExtensions, true));
         file_put_contents($generatedConfigFilePath, $generatedConfigFileContents);
 
-        if (\count($infectionInstalledExtensions) > 0) {
-            $io->write('<info>infection/extension-installer:</info> Extensions installed');
-        } else {
+        $installedExtensionsCount = \count($infectionInstalledExtensions);
+        $invalidExtensionsCount = \count($invalidInfectionExtensions);
+
+        if ($installedExtensionsCount === 0 && $invalidExtensionsCount === 0) {
             $io->write('<info>infection/extension-installer:</info> No extensions found');
         }
 
-        foreach (array_keys($infectionInstalledExtensions) as $name) {
-            $io->write(sprintf('<comment>></comment> <info>%s:</info> installed', $name));
+        if ($installedExtensionsCount > 0) {
+            $io->write('<info>infection/extension-installer:</info> Extensions installed');
+
+            foreach (array_keys($infectionInstalledExtensions) as $name) {
+                $io->write(sprintf('<comment>></comment> <info>%s:</info> installed', $name));
+            }
+        }
+
+        if ($invalidExtensionsCount > 0) {
+            $io->write('<info>infection/extension-installer:</info> Invalid extensions:');
+
+            foreach ($invalidInfectionExtensions as $name => $reason) {
+                $io->write(sprintf('<comment>></comment> <info>%s.</info> (%s)', $name, $reason));
+            }
         }
     }
 }

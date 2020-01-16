@@ -92,6 +92,30 @@ namespace Infection\ExtensionInstaller\Tests {
             $plugin->process($eventMock);
         }
 
+        public function test_it_displays_invalid_infection_extensions(): void
+        {
+            $plugin = new Plugin();
+
+            $packages = [
+                $this->cretePackage(
+                    'infection/codeception-adapter',
+                    'infection-extension',
+                    [
+                        'infection' => [/* class is not specified */]
+                    ]
+                )
+            ];
+
+            $eventMock = $this->createEventMock($packages);
+
+            $this->expectsOutput([
+                '<info>infection/extension-installer:</info> Invalid extensions:',
+                '<comment>></comment> <info>infection/codeception-adapter.</info> (`class` is not specified under `extra.infection` key)'
+            ]);
+
+            $plugin->process($eventMock);
+        }
+
         public function test_it_displays_message_when_extensions_installed(): void
         {
             $plugin = new Plugin();
