@@ -1,6 +1,6 @@
 # Infection - Extensions Installer
 
-Composer plugin for automatic registering of [Infection](https://github.com/infection/infection) extensions.
+Composer plugin for automatic registering of [Infection extensions](https://packagist.org/explore/?type=infection-extension).
 
 ## How to install extension
 
@@ -14,13 +14,8 @@ Infection Extension Installer listens `post-install-cmd` and `post-update-cmd` e
 composer require --dev infection/codecetion-adapter
 
 Using version 1.0.0 for infection/codeception-adapter
-./composer.json has been updated
-Loading composer repositories with package information
-Updating dependencies (including require-dev)
 Package operations: 1 installs, 0 updates, 0 removals
   - Installing infection/codeception-adapter (1.0.0): Downloading 100%
-Writing lock file
-Generating autoload files
 
 infection/extension-installer: Extensions installed
 > infection/codeception-adapter: installed
@@ -47,9 +42,13 @@ Example:
 }
 ```
 
-### Supported extensions
+### Supported extensions types
 
-Currently, Infection supports only Test Framework extensions.
+Currently, Infection supports only Test Framework extensions ([example](https://github.com/infection/codeception-adapter)).
+
+### Available extensions
+
+All Infection extensions can be [discovered on Packagist](https://packagist.org/explore/?type=infection-extension).
 
 ## Infection - Mutation Testing Framework
 
