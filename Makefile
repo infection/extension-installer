@@ -49,7 +49,7 @@ ci-test: prerequisites
 	$(SILENT) $(PHPDBG) $(PHPUNIT) $(PHPUNIT_COVERAGE_CLOVER) --group=$(PHPUNIT_GROUP)
 
 ci-analyze: SILENT=
-ci-analyze: prerequisites ci-phpunit ci-infection ci-phpstan ci-psalm
+ci-analyze: prerequisites ci-cs ci-infection ci-phpstan ci-psalm
 
 ci-phpunit: ci-cs
 	$(SILENT) $(PHPDBG) $(PHPUNIT) $(PHPUNIT_ARGS)
