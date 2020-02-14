@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/infection/extension-installer.svg?branch=master)](https://travis-ci.org/infection/extension-installer)
+[![Coverage Status](https://coveralls.io/repos/github/infection/extension-installer/badge.svg?branch=master)](https://coveralls.io/github/infection/extension-installer?branch=master)
+
 # Infection - Extensions Installer
 
 Composer plugin for automatic registering of [Infection extensions](https://packagist.org/explore/?type=infection-extension).
