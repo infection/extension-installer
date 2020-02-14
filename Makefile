@@ -55,7 +55,7 @@ ci-phpunit: ci-cs
 	$(SILENT) $(PHPDBG) $(PHPUNIT) $(PHPUNIT_ARGS)
 	cp build/logs/junit.xml build/logs/phpunit.junit.xml
 
-ci-infection: ci-phpunit
+ci-infection:
 	$(SILENT) $(PHP) $(INFECTION) $(INFECTION_ARGS)
 
 ci-phpstan: ci-cs
