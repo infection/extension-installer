@@ -23,7 +23,7 @@ infection/extension-installer: Extensions installed
 
 ## How to write an extension for Infection
 
-Infection extension is a composer-based plugin. Basically it is a composer package which conforms to the following requirements:
+Infection extension is a composer-based package. Basically it is a composer package which conforms to the following requirements:
 
 * its type field is set to `infection-extension`
 * it has `extra.infection.class` subkey in its `composer.json` that references a class that will be invoked in the Infection runtime.

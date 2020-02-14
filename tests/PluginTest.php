@@ -1,18 +1,55 @@
 <?php
+/**
+ * This code is licensed under the BSD 3-Clause License.
+ *
+ * Copyright (c) 2017, Maks Rafalko
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * * Redistributions of source code must retain the above copyright notice, this
+ *   list of conditions and the following disclaimer.
+ *
+ * * Redistributions in binary form must reproduce the above copyright notice,
+ *   this list of conditions and the following disclaimer in the documentation
+ *   and/or other materials provided with the distribution.
+ *
+ * * Neither the name of the copyright holder nor the names of its
+ *   contributors may be used to endorse or promote products derived from
+ *   this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+ * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
 
 declare(strict_types=1);
 
 /*
  * Hack to override built-in functions
  */
+
 namespace  Infection\ExtensionInstaller {
-    function file_put_contents() {
+    function file_put_contents(): void
+    {
         // do not write to FS to not override the file inside this package
 
         \Infection\ExtensionInstaller\Tests\PluginTest::$fileHasBeenWritten = true;
     }
 
-    function var_export(array $infectionInstalledExtensions, bool $toReturn) {
+    /**
+     * @param array<mixed> $infectionInstalledExtensions
+     */
+    function var_export(array $infectionInstalledExtensions, bool $toReturn): void
+    {
         // catch to test the result
         \Infection\ExtensionInstaller\Tests\PluginTest::$infectionInstalledExtensions = $infectionInstalledExtensions;
     }
@@ -31,14 +68,20 @@ namespace Infection\ExtensionInstaller\Tests {
     use Composer\Script\Event;
     use Composer\Script\ScriptEvents;
     use Infection\ExtensionInstaller\Plugin;
-    use PHPUnit\Framework\TestCase;
     use PHPUnit\Framework\MockObject\MockObject;
+    use PHPUnit\Framework\TestCase;
 
     final class PluginTest extends TestCase
     {
-        static public $infectionInstalledExtensions = [];
+        /**
+         * @var array<string, mixed>
+         */
+        public static $infectionInstalledExtensions = [];
 
-        static public $fileHasBeenWritten = false;
+        /**
+         * @var bool
+         */
+        public static $fileHasBeenWritten = false;
 
         /**
          * @var IOInterface&MockObject
@@ -56,14 +99,14 @@ namespace Infection\ExtensionInstaller\Tests {
         {
             $plugin = new Plugin();
 
-            self::assertInstanceOf(PluginInterface::class, $plugin);
+            self::assertTrue(is_a($plugin, PluginInterface::class));
         }
 
         public function test_it_implements_event_subscriber_interface(): void
         {
             $plugin = new Plugin();
 
-            self::assertInstanceOf(EventSubscriberInterface::class, $plugin);
+            self::assertTrue(is_a($plugin, EventSubscriberInterface::class));
         }
 
         public function test_it_subscribed_to_events(): void
@@ -101,16 +144,16 @@ namespace Infection\ExtensionInstaller\Tests {
                     'infection/codeception-adapter',
                     'infection-extension',
                     [
-                        'infection' => [/* class is not specified */]
+                        'infection' => [/* class is not specified */],
                     ]
-                )
+                ),
             ];
 
             $eventMock = $this->createEventMock($packages);
 
             $this->expectsOutput([
                 '<info>infection/extension-installer:</info> Invalid extensions:',
-                '<comment>></comment> <info>infection/codeception-adapter.</info> (`class` is not specified under `extra.infection` key)'
+                '<comment>></comment> <info>infection/codeception-adapter.</info> (`class` is not specified under `extra.infection` key)',
             ]);
 
             $plugin->process($eventMock);
@@ -125,9 +168,9 @@ namespace Infection\ExtensionInstaller\Tests {
                     'infection/codeception-adapter',
                     'infection-extension',
                     [
-                        'infection' => ['class' => 'Infection\Codeception\CodeceptionAdapterFactory']
+                        'infection' => ['class' => 'Infection\Codeception\CodeceptionAdapterFactory'],
                     ]
-                )
+                ),
             ];
 
             $eventMock = $this->createEventMock($packages);
@@ -149,14 +192,14 @@ namespace Infection\ExtensionInstaller\Tests {
                     'infection/codeception-adapter',
                     'infection-extension',
                     [
-                        'infection' => ['class' => 'Infection\Codeception\CodeceptionAdapterFactory']
+                        'infection' => ['class' => 'Infection\Codeception\CodeceptionAdapterFactory'],
                     ]
                 ),
                 $this->cretePackage(
                     'infection/phpspec-adapter',
                     'infection-extension',
                     [
-                        'infection' => ['class' => 'Infection\Codeception\PhpSpecAdapterFactory']
+                        'infection' => ['class' => 'Infection\Codeception\PhpSpecAdapterFactory'],
                     ]
                 ),
             ];
@@ -185,7 +228,7 @@ namespace Infection\ExtensionInstaller\Tests {
                     'infection/phpspec-adapter',
                     'infection-extension',
                     [
-                        'infection' => ['class' => 'Infection\Codeception\PhpSpecAdapterFactory']
+                        'infection' => ['class' => 'Infection\Codeception\PhpSpecAdapterFactory'],
                     ]
                 ),
             ];
@@ -209,21 +252,21 @@ namespace Infection\ExtensionInstaller\Tests {
                     'c',
                     'infection-extension',
                     [
-                        'infection' => ['class' => 'Infection\Codeception\C']
+                        'infection' => ['class' => 'Infection\Codeception\C'],
                     ]
                 ),
                 $this->cretePackage(
                     'a',
                     'infection-extension',
                     [
-                        'infection' => ['class' => 'Infection\Codeception\A']
+                        'infection' => ['class' => 'Infection\Codeception\A'],
                     ]
                 ),
                 $this->cretePackage(
                     'b',
                     'infection-extension',
                     [
-                        'infection' => ['class' => 'Infection\Codeception\B']
+                        'infection' => ['class' => 'Infection\Codeception\B'],
                     ]
                 ),
             ];
@@ -253,7 +296,7 @@ namespace Infection\ExtensionInstaller\Tests {
                     'infection/phpspec-adapter',
                     'infection-extension',
                     [
-                        'infection' => ['class' => 'Infection\Codeception\PhpSpecAdapterFactory']
+                        'infection' => ['class' => 'Infection\Codeception\PhpSpecAdapterFactory'],
                     ]
                 ),
             ];
@@ -263,7 +306,7 @@ namespace Infection\ExtensionInstaller\Tests {
             $plugin->process($eventMock);
 
             $reflectionClass = new \ReflectionClass($plugin);
-            $dirWithFile = dirname($reflectionClass->getFileName());
+            $dirWithFile = dirname((string) $reflectionClass->getFileName());
 
             self::assertFileExists(sprintf('%s/GeneratedExtensionsConfig.php', $dirWithFile));
             self::assertTrue(self::$fileHasBeenWritten);
@@ -274,7 +317,7 @@ namespace Infection\ExtensionInstaller\Tests {
                         'extra' => [
                             'class' => 'Infection\Codeception\PhpSpecAdapterFactory',
                         ],
-                        'version' => 'v1.2.3'
+                        'version' => 'v1.2.3',
                     ],
                 ],
                 self::$infectionInstalledExtensions
@@ -290,7 +333,7 @@ namespace Infection\ExtensionInstaller\Tests {
                     'infection/c',
                     'infection-extension',
                     [
-                        'infection' => ['class' => 'Infection\Codeception\C']
+                        'infection' => ['class' => 'Infection\Codeception\C'],
                     ]
                 ),
                 $this->cretePackage(
@@ -301,7 +344,7 @@ namespace Infection\ExtensionInstaller\Tests {
                     'infection/b',
                     'infection-extension',
                     [
-                        'infection' => ['class' => 'Infection\Codeception\B']
+                        'infection' => ['class' => 'Infection\Codeception\B'],
                     ]
                 ),
             ];
@@ -323,14 +366,14 @@ namespace Infection\ExtensionInstaller\Tests {
                         'extra' => [
                             'class' => 'Infection\Codeception\B',
                         ],
-                        'version' => 'v1.2.3'
+                        'version' => 'v1.2.3',
                     ],
                     'infection/c' => [
                         'install_path' => '/path/to/installed/package',
                         'extra' => [
                             'class' => 'Infection\Codeception\C',
                         ],
-                        'version' => 'v1.2.3'
+                        'version' => 'v1.2.3',
                     ],
                 ],
                 self::$infectionInstalledExtensions
@@ -339,6 +382,7 @@ namespace Infection\ExtensionInstaller\Tests {
 
         /**
          * @param PackageInterface[] $packages
+         *
          * @return Event&MockObject
          */
         private function createEventMock(array $packages): MockObject
@@ -364,6 +408,9 @@ namespace Infection\ExtensionInstaller\Tests {
             return $eventMock;
         }
 
+        /**
+         * @param array<string, mixed> $extra
+         */
         private function cretePackage(string $name, string $type, array $extra = []): PackageInterface
         {
             $package = new Package($name, '1.2.3', 'v1.2.3');
@@ -374,6 +421,9 @@ namespace Infection\ExtensionInstaller\Tests {
             return $package;
         }
 
+        /**
+         * @param string[] $outputMessages
+         */
         private function expectsOutput(array $outputMessages): void
         {
             foreach ($outputMessages as $index => $outputMessage) {

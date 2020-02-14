@@ -1,6 +1,6 @@
+.phpunit.result.cache
 /.composer/
 /.idea
 /.php_cs.cache
 /vendor/
-.phpunit.result.cache
 infection.log

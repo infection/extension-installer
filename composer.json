@@ -33,6 +33,14 @@
     },
     "require-dev": {
         "composer/composer": "^1.9",
-        "phpunit/phpunit": "^8.5"
+        "friendsofphp/php-cs-fixer": "^2.16",
+        "infection/infection": "^0.15.2",
+        "phpstan/extension-installer": "^1.0",
+        "phpstan/phpstan": "^0.12.10",
+        "phpstan/phpstan-phpunit": "^0.12.6",
+        "phpstan/phpstan-strict-rules": "^0.12.2",
+        "phpstan/phpstan-webmozart-assert": "^0.12.2",
+        "phpunit/phpunit": "^8.5",
+        "vimeo/psalm": "^3.8"
     }
 }
