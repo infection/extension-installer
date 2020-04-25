@@ -33,10 +33,6 @@
 
 declare(strict_types=1);
 
-/*
- * Hack to override built-in functions
- */
-
 namespace  Infection\ExtensionInstaller {
     function file_put_contents(): void
     {
