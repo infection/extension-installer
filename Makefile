@@ -2,17 +2,13 @@
 
 # Use any most recent PHP version
 PHP=$(shell which php)
-PHPDBG=php
 
 # Default parallelism
 JOBS=$(shell nproc)
 
-# Default silencer if installed
-SILENT=$(shell which chronic)
-
 # PHP CS Fixer
 PHP_CS_FIXER=vendor/bin/php-cs-fixer
-PHP_CS_FIXER_ARGS=--cache-file=build/cache/.php_cs.cache --verbose
+PHP_CS_FIXER_ARGS=--diff --diff-format=udiff --verbose
 export PHP_CS_FIXER_IGNORE_ENV=1
 
 # PHPUnit
@@ -35,36 +31,27 @@ COMPOSER=$(PHP) $(shell which composer)
 INFECTION=vendor/bin/infection
 MIN_MSI=97
 MIN_COVERED_MSI=100
-INFECTION_ARGS=--min-msi=$(MIN_MSI) --min-covered-msi=$(MIN_COVERED_MSI) --threads=$(JOBS) --log-verbosity=default --show-mutations
+INFECTION_ARGS=--min-msi=$(MIN_MSI) --min-covered-msi=$(MIN_COVERED_MSI) --threads=$(JOBS) --log-verbosity=none --no-interaction --no-progress --show-mutations
 
 all: test
 
-##############################################################
-# Continuous Integration                                     #
-##############################################################
+cs:
+	$(PHP_CS_FIXER) fix $(PHP_CS_FIXER_ARGS) --dry-run
+	LC_ALL=C sort -c -u .gitignore
 
-ci-test: SILENT=
-ci-test: prerequisites
-	$(SILENT) $(PHPDBG) $(PHPUNIT) $(PHPUNIT_COVERAGE_CLOVER)
+phpstan:
+	$(PHPSTAN) $(PHPSTAN_ARGS) --no-progress
 
-ci-analyze: SILENT=
-ci-analyze: prerequisites ci-cs ci-infection ci-phpstan ci-psalm
+psalm:
+	$(PSALM) $(PSALM_ARGS) --no-cache --shepherd
 
-ci-phpunit: ci-cs
-	$(SILENT) $(PHPDBG) $(PHPUNIT) $(PHPUNIT_ARGS)
-	cp build/logs/junit.xml build/logs/phpunit.junit.xml
+static-analyze: phpstan psalm
 
-ci-infection:
-	$(SILENT) $(PHP) $(INFECTION) $(INFECTION_ARGS)
+test-unit:
+	$(PHPUNIT) $(PHPUNIT_ARGS)
 
-ci-phpstan: ci-cs
-	$(SILENT) $(PHP) $(PHPSTAN) $(PHPSTAN_ARGS) --no-progress
-
-ci-psalm: ci-cs
-	$(SILENT) $(PHP) $(PSALM) $(PSALM_ARGS) --no-cache --shepherd
-
-ci-cs: prerequisites
-	$(SILENT) $(PHP) $(PHP_CS_FIXER) $(PHP_CS_FIXER_ARGS) --dry-run --stop-on-violation fix
+infection:
+	$(INFECTION) $(INFECTION_ARGS)
 
 ##############################################################
 # Development Workflow                                       #
@@ -74,21 +61,21 @@ test: phpunit analyze composer-validate
 
 .PHONY: composer-validate
 composer-validate: test-prerequisites
-	$(SILENT) $(COMPOSER) validate --strict
+	$(COMPOSER) validate --strict
 
 test-prerequisites: prerequisites composer.lock
 
-phpunit: cs
-	$(SILENT) $(PHP) $(PHPUNIT) $(PHPUNIT_ARGS) --verbose
+phpunit: cs-fix
+	$(PHPUNIT) $(PHPUNIT_ARGS) --verbose
 	cp build/logs/junit.xml build/logs/phpunit.junit.xml
-	$(SILENT) $(PHP) $(INFECTION) $(INFECTION_ARGS)
+	$(PHP) $(INFECTION) $(INFECTION_ARGS)
 
-analyze: cs
-	$(SILENT) $(PHP) $(PHPSTAN) $(PHPSTAN_ARGS)
-	$(SILENT) $(PHP) $(PSALM) $(PSALM_ARGS)
+analyze: cs-fix
+	$(PHPSTAN) $(PHPSTAN_ARGS)
+	$(PSALM) $(PSALM_ARGS)
 
-cs: test-prerequisites
-	$(SILENT) $(PHP) $(PHP_CS_FIXER) $(PHP_CS_FIXER_ARGS) --diff fix
+cs-fix: test-prerequisites
+	$(PHP_CS_FIXER) fix $(PHP_CS_FIXER_ARGS)
 	LC_ALL=C sort -u .gitignore -o .gitignore
 
 ##############################################################
@@ -97,21 +84,17 @@ cs: test-prerequisites
 
 # We need both vendor/autoload.php and composer.lock being up to date
 .PHONY: prerequisites
-prerequisites: report-php-version build/cache vendor/autoload.php composer.lock infection.json.dist .phpstan.neon
+prerequisites: build/cache vendor/autoload.php composer.lock infection.json.dist .phpstan.neon
 
 # Do install if there's no 'vendor'
 vendor/autoload.php:
-	$(SILENT) $(COMPOSER) install --prefer-dist
-	test -d vendor/infection/infection/src/StreamWrapper/ && rm -fr vendor/infection/infection/src/StreamWrapper/ && $(SILENT) $(COMPOSER) dump-autoload || true
+	$(COMPOSER) install --prefer-dist
+	test -d vendor/infection/infection/src/StreamWrapper/ && rm -fr vendor/infection/infection/src/StreamWrapper/ && $(COMPOSER) dump-autoload || true
 
 # If composer.lock is older than `composer.json`, do update,
 # and touch composer.lock because composer not always does that
 composer.lock: composer.json
-	$(SILENT) $(COMPOSER) update && touch composer.lock
+	$(COMPOSER) update && touch composer.lock
 
 build/cache:
 	mkdir -p build/cache
-
-.PHONY: report-php-version
-report-php-version:
-	# Using $(PHP)

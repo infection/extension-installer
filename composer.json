@@ -32,16 +32,16 @@
         "composer-plugin-api": "^1.1 || ^2.0"
     },
     "require-dev": {
-        "composer/composer": "^1.9",
-        "friendsofphp/php-cs-fixer": "^2.16",
+        "composer/composer": "^1.9 || ^2.0",
+        "friendsofphp/php-cs-fixer": "^2.18, <2.19",
         "infection/infection": "^0.15.2",
-        "php-coveralls/php-coveralls": "^2.2",
+        "php-coveralls/php-coveralls": "^2.4",
         "phpstan/extension-installer": "^1.0",
         "phpstan/phpstan": "^0.12.10",
         "phpstan/phpstan-phpunit": "^0.12.6",
         "phpstan/phpstan-strict-rules": "^0.12.2",
         "phpstan/phpstan-webmozart-assert": "^0.12.2",
         "phpunit/phpunit": "^8.5",
-        "vimeo/psalm": "^3.8"
+        "vimeo/psalm": "^4.8"
     }
 }
