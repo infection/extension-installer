@@ -1,4 +1,2 @@
 parameters:
     level: max
-    ignoreErrors:
-        - '#Function Infection\\ExtensionInstaller\\file_put_contents not found while trying to analyse it - autoloading is probably not configured properly#'

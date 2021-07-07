@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/infection/extension-installer.svg?branch=master)](https://travis-ci.org/infection/extension-installer)
+[![CI](https://github.com/infection/extension-installer/workflows/Tests/badge.svg)](https://github.com/infection/extension-installer/actions)
 [![Coverage Status](https://coveralls.io/repos/github/infection/extension-installer/badge.svg?branch=master)](https://coveralls.io/github/infection/extension-installer?branch=master)
 
 # Infection - Extensions Installer
