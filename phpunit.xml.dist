@@ -4,19 +4,19 @@
          bootstrap="./vendor/autoload.php"
          colors="true"
          executionOrder="random"
+         failOnWarning="true"
+         failOnRisky="true"
          verbose="true"
 >
-
     <testsuites>
         <testsuite name="Infection Extension Installer Test Suite">
             <directory>tests</directory>
         </testsuite>
     </testsuites>
 
-    <filter>
-        <whitelist>
+    <coverage cacheDirectory="./reports/.coverage-cache">
+        <include>
             <directory>src</directory>
-        </whitelist>
-    </filter>
-
+        </include>
+    </coverage>
 </phpunit>
