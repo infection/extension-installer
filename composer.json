@@ -24,7 +24,7 @@
     },
     "config": {
         "platform": {
-            "php": "7.2.9"
+            "php": "7.4"
         },
         "sort-packages": true
     },
@@ -41,7 +41,7 @@
         "phpstan/phpstan-phpunit": "^0.12.6",
         "phpstan/phpstan-strict-rules": "^0.12.2",
         "phpstan/phpstan-webmozart-assert": "^0.12.2",
-        "phpunit/phpunit": "^8.5",
+        "phpunit/phpunit": "^9.5",
         "vimeo/psalm": "^4.8"
     }
 }

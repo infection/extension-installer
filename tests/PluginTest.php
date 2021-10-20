@@ -147,10 +147,13 @@ namespace Infection\ExtensionInstaller\Tests {
 
             $eventMock = $this->createEventMock($packages);
 
-            $this->expectsOutput([
-                '<info>infection/extension-installer:</info> Invalid extensions:',
-                '<comment>></comment> <info>infection/codeception-adapter.</info> (`class` is not specified under `extra.infection` key)',
-            ]);
+            $this->ioMock
+                ->expects(self::exactly(2))
+                ->method('write')
+                ->withConsecutive(
+                    ['<info>infection/extension-installer:</info> Invalid extensions:'],
+                    ['<comment>></comment> <info>infection/codeception-adapter.</info> (`class` is not specified under `extra.infection` key)']
+                );
 
             $plugin->process($eventMock);
         }
@@ -171,10 +174,13 @@ namespace Infection\ExtensionInstaller\Tests {
 
             $eventMock = $this->createEventMock($packages);
 
-            $this->expectsOutput([
-                '<info>infection/extension-installer:</info> Extensions installed',
-                '<comment>></comment> <info>infection/codeception-adapter:</info> installed',
-            ]);
+            $this->ioMock
+                ->expects(self::exactly(2))
+                ->method('write')
+                ->withConsecutive(
+                    ['<info>infection/extension-installer:</info> Extensions installed'],
+                    ['<comment>></comment> <info>infection/codeception-adapter:</info> installed']
+                );
 
             $plugin->process($eventMock);
         }
@@ -202,11 +208,14 @@ namespace Infection\ExtensionInstaller\Tests {
 
             $eventMock = $this->createEventMock($packages);
 
-            $this->expectsOutput([
-                '<info>infection/extension-installer:</info> Extensions installed',
-                '<comment>></comment> <info>infection/codeception-adapter:</info> installed',
-                '<comment>></comment> <info>infection/phpspec-adapter:</info> installed',
-            ]);
+            $this->ioMock
+                ->expects(self::exactly(3))
+                ->method('write')
+                ->withConsecutive(
+                    ['<info>infection/extension-installer:</info> Extensions installed'],
+                    ['<comment>></comment> <info>infection/codeception-adapter:</info> installed'],
+                    ['<comment>></comment> <info>infection/phpspec-adapter:</info> installed']
+                );
 
             $plugin->process($eventMock);
         }
@@ -231,10 +240,13 @@ namespace Infection\ExtensionInstaller\Tests {
 
             $eventMock = $this->createEventMock($packages);
 
-            $this->expectsOutput([
-                '<info>infection/extension-installer:</info> Extensions installed',
-                '<comment>></comment> <info>infection/phpspec-adapter:</info> installed',
-            ]);
+            $this->ioMock
+                ->expects(self::exactly(2))
+                ->method('write')
+                ->withConsecutive(
+                    ['<info>infection/extension-installer:</info> Extensions installed'],
+                    ['<comment>></comment> <info>infection/phpspec-adapter:</info> installed']
+                );
 
             $plugin->process($eventMock);
         }
@@ -269,12 +281,15 @@ namespace Infection\ExtensionInstaller\Tests {
 
             $eventMock = $this->createEventMock($packages);
 
-            $this->expectsOutput([
-                '<info>infection/extension-installer:</info> Extensions installed',
-                '<comment>></comment> <info>a:</info> installed',
-                '<comment>></comment> <info>b:</info> installed',
-                '<comment>></comment> <info>c:</info> installed',
-            ]);
+            $this->ioMock
+                ->expects(self::exactly(4))
+                ->method('write')
+                ->withConsecutive(
+                    ['<info>infection/extension-installer:</info> Extensions installed'],
+                    ['<comment>></comment> <info>a:</info> installed'],
+                    ['<comment>></comment> <info>b:</info> installed'],
+                    ['<comment>></comment> <info>c:</info> installed']
+                );
 
             $plugin->process($eventMock);
         }
@@ -347,11 +362,13 @@ namespace Infection\ExtensionInstaller\Tests {
 
             $eventMock = $this->createEventMock($packages);
 
-            $this->expectsOutput([
-                '<info>infection/extension-installer:</info> Extensions installed',
-                '<comment>></comment> <info>infection/b:</info> installed',
-                '<comment>></comment> <info>infection/c:</info> installed',
-            ]);
+            $this->ioMock
+                ->method('write')
+                ->withConsecutive(
+                    ['<info>infection/extension-installer:</info> Extensions installed'],
+                    ['<comment>></comment> <info>infection/b:</info> installed'],
+                    ['<comment>></comment> <info>infection/c:</info> installed']
+                );
 
             $plugin->process($eventMock);
 
@@ -415,18 +432,6 @@ namespace Infection\ExtensionInstaller\Tests {
             $package->setExtra($extra);
 
             return $package;
-        }
-
-        /**
-         * @param string[] $outputMessages
-         */
-        private function expectsOutput(array $outputMessages): void
-        {
-            foreach ($outputMessages as $index => $outputMessage) {
-                $this->ioMock->expects(self::at($index))
-                    ->method('write')
-                    ->with($outputMessage);
-            }
         }
     }
 }
