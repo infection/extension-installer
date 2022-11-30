@@ -26,7 +26,10 @@
         "platform": {
             "php": "7.4"
         },
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "phpstan/extension-installer": true
+        }
     },
     "require": {
         "composer-plugin-api": "^1.1 || ^2.0"

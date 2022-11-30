@@ -93,16 +93,12 @@ namespace Infection\ExtensionInstaller\Tests {
 
         public function test_it_implements_plugin_interface(): void
         {
-            $plugin = new Plugin();
-
-            self::assertTrue(is_a($plugin, PluginInterface::class));
+            self::assertInstanceOf(PluginInterface::class, new Plugin());
         }
 
         public function test_it_implements_event_subscriber_interface(): void
         {
-            $plugin = new Plugin();
-
-            self::assertTrue(is_a($plugin, EventSubscriberInterface::class));
+            self::assertInstanceOf(EventSubscriberInterface::class, new Plugin());
         }
 
         public function test_it_subscribed_to_events(): void
