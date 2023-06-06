@@ -14,7 +14,7 @@ Extension will be registered _automatically_.
 Infection Extension Installer listens `post-install-cmd` and `post-update-cmd` events and as soon as it finds an Infection extension, it automatically registers it in Infection.
 
 ```bash
-composer require --dev infection/codecetion-adapter
+composer require --dev infection/codeception-adapter
 
 Using version 1.0.0 for infection/codeception-adapter
 Package operations: 1 installs, 0 updates, 0 removals
